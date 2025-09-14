@@ -5,10 +5,10 @@ mod rect;
 mod piece;
 mod block;
 
-use std::time::SystemTime;
+use std::time::{SystemTime, UNIX_EPOCH};
 
 use game_handler::{Game, MoveDirection};
-use macroquad::{audio::{load_sound_from_bytes, play_sound, PlaySoundParams}, prelude::*};
+use macroquad::{audio::{load_sound_from_bytes, play_sound, PlaySoundParams}, prelude::*, rand::srand};
 
 const GREY: Color = GRAY; // i refuse to spell grey that way
 
@@ -39,6 +39,8 @@ async fn main() {
     play_sound(&korbeiniki, sound_params);
 
     font.set_filter(FilterMode::Nearest);
+
+    srand(SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_secs());
 
     let mut game = Game::new_game();
 

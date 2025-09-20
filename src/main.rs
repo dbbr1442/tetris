@@ -9,6 +9,7 @@ use std::time::{SystemTime, UNIX_EPOCH};
 
 use game_handler::{Game, MoveDirection};
 use macroquad::{audio::{load_sound_from_bytes, play_sound, PlaySoundParams}, prelude::*, rand::srand};
+use macroquad::time::get_time;
 
 const GREY: Color = GRAY; // i refuse to spell grey that way
 
@@ -30,7 +31,6 @@ fn config() -> Conf {
 #[macroquad::main(config)]
 async fn main() {
     let korbeiniki = load_sound_from_bytes(include_bytes!("resources/korobeiniki.wav")).await.unwrap();
-    let mut font = load_ttf_font_from_bytes(include_bytes!("resources/font.ttf")).unwrap();
 
     let sound_params = PlaySoundParams {
         looped: true,
@@ -38,9 +38,14 @@ async fn main() {
     };
     play_sound(&korbeiniki, sound_params);
 
+    let mut font = load_ttf_font_from_bytes(include_bytes!("resources/font.ttf")).unwrap();
     font.set_filter(FilterMode::Nearest);
 
-    srand(SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_secs());
+    if cfg!(target_family = "wasm") {
+        srand((get_time() * 10000.0) as u64);
+    } else {
+        srand(SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_secs());
+    }
 
     let mut game = Game::new_game();
 
@@ -99,14 +104,15 @@ async fn main() {
             draw_rectangle(x, y, w, h, next_piece.1);
         }
 
-        if game.timer.elapsed().unwrap() > std::time::Duration::from_secs(1) && (!game.lost) {
+        let interval = (1000.0-((1.0/11.0)*game.score as f64))/1000.0;
+        if get_time()-game.timer > interval && (!game.lost) {
             let collision = game.move_piece(MoveDirection::Down);
             if collision {
                 game = game.place_piece();
                 game.check_lose();
                 game.check_line();
             }
-            game.timer = SystemTime::now();
+            game.timer = get_time();
         }
         
         text_helper(&font, 128, 900.0, 150.0, "SCORE");

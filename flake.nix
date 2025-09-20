@@ -8,17 +8,15 @@
     system = "x86_64-linux";
     pkgs = nixpkgs.legacyPackages.${system};
 
-    nativeBuildInputs = with pkgs; [ rustup rustc cargo ]; # dependencies at compile time
-    buildInputs = with pkgs; [ pkg-config alsa-lib xorg.libX11 xorg.libXi libxkbcommon libGL mesa ]; # dependencies to be linked against
+    nativeBuildInputs = with pkgs; [ rustc cargo live-server lld ]; 
+    buildInputs = with pkgs; [ pkg-config alsa-lib xorg.libX11 xorg.libXi libxkbcommon libGL ]; 
     
-    # read prject metadata from cargo.toml
+    # read project metadata from cargo.toml
     cargoTOML = builtins.fromTOML (builtins.readFile ./Cargo.toml);
     pname = cargoTOML.package.name;
     version = cargoTOML.package.version;
 
     lib = pkgs.lib;
-
-    # create shorthand for gitignore library
   in
   {
 

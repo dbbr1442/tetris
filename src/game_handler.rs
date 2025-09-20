@@ -1,4 +1,4 @@
-use std::time::SystemTime;
+use macroquad::time::get_time;
 
 use crate::piece::{Piece, PieceEnum};
 use crate::piece::FindOpen;
@@ -23,7 +23,7 @@ pub struct Game {
     bag_i: usize,
     pub lost: bool,
     //pub timer: f64,
-    pub timer: SystemTime,
+    pub timer: f64,
 }
 
 impl Game {
@@ -189,7 +189,7 @@ impl Game {
             bag_i: 1,
             lost: false,
             //timer: 0.0,
-            timer: SystemTime::now(),
+            timer: get_time(),
         }
     }
 

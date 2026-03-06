@@ -30,13 +30,13 @@ fn config() -> Conf {
 
 #[macroquad::main(config)]
 async fn main() {
-    let korbeiniki = load_sound_from_bytes(include_bytes!("resources/korobeiniki.wav")).await.unwrap();
+    //let korbeiniki = load_sound_from_bytes(include_bytes!("resources/korobeiniki.wav")).await.unwrap();
 
-    let sound_params = PlaySoundParams {
-        looped: true,
-        volume: 1.0,
-    };
-    play_sound(&korbeiniki, sound_params);
+    //let sound_params = PlaySoundParams {
+    //    looped: true,
+    //    volume: 1.0,
+    //};
+    //play_sound(&korbeiniki, sound_params);
 
     let mut font = load_ttf_font_from_bytes(include_bytes!("resources/font.ttf")).unwrap();
     font.set_filter(FilterMode::Nearest);
